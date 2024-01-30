@@ -28,6 +28,7 @@ from dlio_benchmark.reader.reader_factory import ReaderFactory
 from dlio_benchmark.utils.utility import utcnow, DLIOMPI
 from dlio_benchmark.utils.config import ConfigArguments
 from dlio_profiler.logger import fn_interceptor as Profile
+from dataflux_pytorch import dataflux_mapstyle_dataset
 
 dlp = Profile(MODULE_DATA_LOADER)
 
@@ -98,14 +99,19 @@ class TorchDataLoader(BaseDataLoader):
 
     @dlp.log
     def read(self):
-        dataset = TorchDataset(
-            self.format_type,
-            self.dataset_type,
-            self.epoch_number,
-            self.num_samples,
-            self._args.read_threads,
-            self.batch_size,
+        # dataset = TorchDataset(
+        #     self.format_type,
+        #     self.dataset_type,
+        #     self.epoch_number,
+        #     self.num_samples,
+        #     self._args.read_threads,
+        #     self.batch_size,
+        # )
+        dataset = dataflux_mapstyle_dataset.DataFluxMapStyleDataset(
+            project_name="zimbruplayground",
+            bucket_name="bernardhan-dataflux-unet3d-small",
         )
+
         if self._args.sample_shuffle != Shuffle.OFF:
             # torch seed is used for all functions within.
             torch.manual_seed(self._args.seed)
