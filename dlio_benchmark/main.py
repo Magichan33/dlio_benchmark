@@ -449,7 +449,6 @@ def main(cfg: DictConfig) -> None:
     """
     The main method to start the benchmark runtime.
     """
-    logging.getLogger().setLevel(logging.DEBUG)
     DLIOMPI.get_instance().initialize()
     benchmark = DLIOBenchmark(cfg["workload"])
     os.environ["DARSHAN_DISABLE"] = "1"
@@ -460,5 +459,6 @@ def main(cfg: DictConfig) -> None:
 
 
 if __name__ == "__main__":
+    logging.getLogger().setLevel(logging.ERROR)
     main()
     exit(0)
