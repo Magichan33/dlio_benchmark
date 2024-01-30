@@ -22,6 +22,9 @@ import pandas as pd
 from time import time, sleep
 import json
 import numpy as np
+import dataflux_pytorch
+
+logging.getLogger(dataflux_pytorch.__name__).setLevel(logging.ERROR)
 
 # Reduce TF and CUDA logging
 from numpy import random
@@ -459,6 +462,5 @@ def main(cfg: DictConfig) -> None:
 
 
 if __name__ == "__main__":
-    logging.getLogger().setLevel(logging.ERROR)
     main()
     exit(0)
