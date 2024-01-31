@@ -117,7 +117,7 @@ class TorchDataLoader(BaseDataLoader):
 
         dataset = dataflux_mapstyle_dataset.DataFluxMapStyleDataset(
             project_name="zimbruplayground",
-            bucket_name="bernardhan-unet3d-500k",
+            bucket_name="bernardhan-unet3d-50k-3mb",
             data_format_fn=read_image_modified,
         )
         print(len(dataset.objects))
