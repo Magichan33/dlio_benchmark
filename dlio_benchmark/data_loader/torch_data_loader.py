@@ -109,8 +109,11 @@ class TorchDataLoader(BaseDataLoader):
         #     self._args.read_threads,
         #     self.batch_size,
         # )
-        def read_image_modified(content_in_bytes):
-            return numpy.load(io.BytesIO(content_in_bytes), allow_pickle=True)["x"]
+        def read_image_modified(contents_in_bytes):
+            return [
+                numpy.load(io.BytesIO(x), allow_pickle=True)["x"]
+                for x in contents_in_bytes
+            ]
 
         dataset = dataflux_mapstyle_dataset.DataFluxMapStyleDataset(
             project_name="zimbruplayground",
