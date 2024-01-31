@@ -163,8 +163,8 @@ class TorchDataLoader(BaseDataLoader):
             if torch.__version__ != "1.3.1":
                 kwargs["persistent_workers"] = True
 
-        def collate_fn(batch):
-            return tuple(zip(*batch))
+        # def collate_fn(batch):
+        #     return tuple(zip(*batch))
 
         self._dataset = DataLoader(
             dataset,
@@ -173,7 +173,7 @@ class TorchDataLoader(BaseDataLoader):
             num_workers=self._args.read_threads,
             pin_memory=True,
             drop_last=True,
-            collate_fn=collate_fn,
+            # collate_fn=collate_fn,
             # worker_init_fn=dataset.worker_init,
             **kwargs,
         )  # 2 is the default value
