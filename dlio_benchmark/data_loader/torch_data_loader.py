@@ -109,7 +109,7 @@ class TorchDataLoader(BaseDataLoader):
         # )
         dataset = dataflux_mapstyle_dataset.DataFluxMapStyleDataset(
             project_name="zimbruplayground",
-            bucket_name="bernardhan-unet3d-50k-3mb",
+            bucket_name="bernardhan-unet3d-500k",
         )
 
         if self._args.sample_shuffle != Shuffle.OFF:
