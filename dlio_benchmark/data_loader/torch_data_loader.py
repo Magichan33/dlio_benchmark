@@ -18,6 +18,8 @@ from time import time
 import logging
 import math
 import pickle
+import numpy
+import io
 import torch
 from torch.utils.data import Dataset, DataLoader, RandomSampler, SequentialSampler
 
@@ -107,10 +109,15 @@ class TorchDataLoader(BaseDataLoader):
         #     self._args.read_threads,
         #     self.batch_size,
         # )
+        def read_image_modified(content_in_bytes):
+            return numpy.load(io.BytesIO(content_in_bytes), allow_pickle=True)["x"]
+
         dataset = dataflux_mapstyle_dataset.DataFluxMapStyleDataset(
             project_name="zimbruplayground",
             bucket_name="bernardhan-unet3d-500k",
+            data_format_fn=read_image_modified,
         )
+        print(len(dataset.objects))
 
         if self._args.sample_shuffle != Shuffle.OFF:
             # torch seed is used for all functions within.
