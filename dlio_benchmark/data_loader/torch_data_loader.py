@@ -121,6 +121,7 @@ class TorchDataLoader(BaseDataLoader):
             data_format_fn=read_image_modified,
         )
         print(len(dataset.objects))
+        print(self._args.sample_shuffle)
 
         if self._args.sample_shuffle != Shuffle.OFF:
             # torch seed is used for all functions within.
@@ -130,6 +131,7 @@ class TorchDataLoader(BaseDataLoader):
             torch_generator = torch.Generator()
             torch_generator.manual_seed(seed)
             # Pass generator to sampler
+            print("sampler used")
             sampler = RandomSampler(dataset, generator=torch_generator)
         else:
             sampler = SequentialSampler(dataset)
