@@ -117,11 +117,10 @@ class TorchDataLoader(BaseDataLoader):
 
         dataset = dataflux_mapstyle_dataset.DataFluxMapStyleDataset(
             project_name="zimbruplayground",
-            bucket_name="bernardhan-unet3d-5k-150mb-2",
+            bucket_name="bernardhan-unet3d-2m-500kb",
             data_format_fn=read_image_modified,
         )
         print(len(dataset.objects))
-        print(self._args.sample_shuffle)
 
         if self._args.sample_shuffle != Shuffle.OFF:
             # torch seed is used for all functions within.
