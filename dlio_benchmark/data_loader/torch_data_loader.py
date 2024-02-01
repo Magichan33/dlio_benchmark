@@ -14,6 +14,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
+
 from time import time
 import logging
 import math
@@ -119,6 +120,7 @@ class TorchDataLoader(BaseDataLoader):
             project_name="zimbruplayground",
             bucket_name="bernardhan-unet3d-2m-500kb",
             data_format_fn=read_image_modified,
+            config=dataflux_mapstyle_dataset.Config(num_processes=20),
         )
         print(len(dataset.objects))
 
