@@ -375,6 +375,10 @@ class StatsCounter(object):
             / (self.end_timestamp - self.start_timestamp)
             * self.batch_size
         )
+        logging.info(f"bernardhan: total_compute_time = {total_compute_time}")
+        logging.info(
+            f"bernardhan: self.end_timestamp - self.start_timestamp - self.output[epoch]['proc'][key][0]={self.end_timestamp} - {self.start_timestamp} - {self.output[epoch]['proc'][key][0]}"
+        )
         logging.info(
             f"bernardhan: len(self.output[epoch]['compute'][key])={len(self.output[epoch]['compute'][key])}, (self.end_timestamp - self.start_timestamp)={(self.end_timestamp - self.start_timestamp)}, self.batch_size={self.batch_size}, throughput={throughput}"
         )
