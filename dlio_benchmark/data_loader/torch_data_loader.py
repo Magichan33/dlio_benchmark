@@ -102,24 +102,24 @@ class TorchDataLoader(BaseDataLoader):
 
     @dlp.log
     def read(self):
-        # dataset = TorchDataset(
-        #     self.format_type,
-        #     self.dataset_type,
-        #     self.epoch_number,
-        #     self.num_samples,
-        #     self._args.read_threads,
-        #     self.batch_size,
-        # )
-        def read_image_modified(content_in_bytes):
-            return numpy.load(io.BytesIO(content_in_bytes), allow_pickle=True)["x"]
-
-        dataset = dataflux_mapstyle_dataset.DataFluxMapStyleDataset(
-            project_name="zimbruplayground",
-            bucket_name="bernardhan-unet3d-500k",
-            data_format_fn=read_image_modified,
-            config=dataflux_mapstyle_dataset.Config(num_processes=20),
+        dataset = TorchDataset(
+            self.format_type,
+            self.dataset_type,
+            self.epoch_number,
+            self.num_samples,
+            self._args.read_threads,
+            self.batch_size,
         )
-        print(len(dataset.objects))
+        # def read_image_modified(content_in_bytes):
+        #     return numpy.load(io.BytesIO(content_in_bytes), allow_pickle=True)["x"]
+
+        # dataset = dataflux_mapstyle_dataset.DataFluxMapStyleDataset(
+        #     project_name="zimbruplayground",
+        #     bucket_name="bernardhan-unet3d-500k",
+        #     data_format_fn=read_image_modified,
+        #     config=dataflux_mapstyle_dataset.Config(num_processes=20),
+        # )
+        # print(len(dataset.objects))
 
         if self._args.sample_shuffle != Shuffle.OFF:
             # torch seed is used for all functions within.
