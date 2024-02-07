@@ -19,8 +19,6 @@ from time import time
 import logging
 import math
 import pickle
-import numpy
-import io
 import torch
 from torch.utils.data import Dataset, DataLoader, RandomSampler, SequentialSampler
 
@@ -31,7 +29,6 @@ from dlio_benchmark.reader.reader_factory import ReaderFactory
 from dlio_benchmark.utils.utility import utcnow, DLIOMPI
 from dlio_benchmark.utils.config import ConfigArguments
 from dlio_profiler.logger import fn_interceptor as Profile
-from dataflux_pytorch import dataflux_mapstyle_dataset
 
 dlp = Profile(MODULE_DATA_LOADER)
 
@@ -87,7 +84,7 @@ class TorchDataset(Dataset):
     def __getitem__(self, image_idx):
         self.num_images_read += 1
         step = int(math.ceil(self.num_images_read / self.batch_size))
-        logging.info(
+        logging.debug(
             f"{utcnow()} Rank {DLIOMPI.get_instance().rank()} reading {image_idx} sample"
         )
         return self.reader.read_index(image_idx, step)
@@ -102,25 +99,14 @@ class TorchDataLoader(BaseDataLoader):
 
     @dlp.log
     def read(self):
-        # dataset = TorchDataset(
-        #     self.format_type,
-        #     self.dataset_type,
-        #     self.epoch_number,
-        #     self.num_samples,
-        #     self._args.read_threads,
-        #     self.batch_size,
-        # )
-        def read_image_modified(content_in_bytes):
-            return numpy.load(io.BytesIO(content_in_bytes), allow_pickle=True)["x"]
-
-        dataset = dataflux_mapstyle_dataset.DataFluxMapStyleDataset(
-            project_name="zimbruplayground",
-            bucket_name="bernardhan-unet3d-500k",
-            data_format_fn=read_image_modified,
-            config=dataflux_mapstyle_dataset.Config(num_processes=20),
+        dataset = TorchDataset(
+            self.format_type,
+            self.dataset_type,
+            self.epoch_number,
+            self.num_samples,
+            self._args.read_threads,
+            self.batch_size,
         )
-        print(len(dataset.objects))
-
         if self._args.sample_shuffle != Shuffle.OFF:
             # torch seed is used for all functions within.
             torch.manual_seed(self._args.seed)
@@ -129,7 +115,6 @@ class TorchDataLoader(BaseDataLoader):
             torch_generator = torch.Generator()
             torch_generator.manual_seed(seed)
             # Pass generator to sampler
-            print("sampler used")
             sampler = RandomSampler(dataset, generator=torch_generator)
         else:
             sampler = SequentialSampler(dataset)
@@ -162,22 +147,30 @@ class TorchDataLoader(BaseDataLoader):
             }
             if torch.__version__ != "1.3.1":
                 kwargs["persistent_workers"] = True
-
-        # def collate_fn(batch):
-        #     return tuple(zip(*batch))
-
-        self._dataset = DataLoader(
-            dataset,
-            batch_size=self.batch_size,
-            sampler=sampler,
-            num_workers=self._args.read_threads,
-            pin_memory=True,
-            drop_last=True,
-            # collate_fn=collate_fn,
-            # worker_init_fn=dataset.worker_init,
-            **kwargs,
-        )  # 2 is the default value
-
+        if torch.__version__ == "1.3.1":
+            if "prefetch_factor" in kwargs:
+                del kwargs["prefetch_factor"]
+            self._dataset = DataLoader(
+                dataset,
+                batch_size=self.batch_size,
+                sampler=sampler,
+                num_workers=self._args.read_threads,
+                pin_memory=True,
+                drop_last=True,
+                worker_init_fn=dataset.worker_init,
+                **kwargs,
+            )
+        else:
+            self._dataset = DataLoader(
+                dataset,
+                batch_size=self.batch_size,
+                sampler=sampler,
+                num_workers=self._args.read_threads,
+                pin_memory=True,
+                drop_last=True,
+                worker_init_fn=dataset.worker_init,
+                **kwargs,
+            )  # 2 is the default value
         logging.debug(
             f"{utcnow()} Rank {self._args.my_rank} will read {len(self._dataset) * self.batch_size} files"
         )
