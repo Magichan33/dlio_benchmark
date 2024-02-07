@@ -102,24 +102,24 @@ class TorchDataLoader(BaseDataLoader):
 
     @dlp.log
     def read(self):
-        dataset = TorchDataset(
-            self.format_type,
-            self.dataset_type,
-            self.epoch_number,
-            self.num_samples,
-            self._args.read_threads,
-            self.batch_size,
-        )
-        # def read_image_modified(content_in_bytes):
-        #     return numpy.load(io.BytesIO(content_in_bytes), allow_pickle=True)["x"]
-
-        # dataset = dataflux_mapstyle_dataset.DataFluxMapStyleDataset(
-        #     project_name="zimbruplayground",
-        #     bucket_name="bernardhan-unet3d-500k",
-        #     data_format_fn=read_image_modified,
-        #     config=dataflux_mapstyle_dataset.Config(num_processes=20),
+        # dataset = TorchDataset(
+        #     self.format_type,
+        #     self.dataset_type,
+        #     self.epoch_number,
+        #     self.num_samples,
+        #     self._args.read_threads,
+        #     self.batch_size,
         # )
-        # print(len(dataset.objects))
+        def read_image_modified(content_in_bytes):
+            return numpy.load(io.BytesIO(content_in_bytes), allow_pickle=True)["x"]
+
+        dataset = dataflux_mapstyle_dataset.DataFluxMapStyleDataset(
+            project_name="zimbruplayground",
+            bucket_name="bernardhan-unet3d-500k",
+            data_format_fn=read_image_modified,
+            config=dataflux_mapstyle_dataset.Config(num_processes=20),
+        )
+        print(len(dataset.objects))
 
         if self._args.sample_shuffle != Shuffle.OFF:
             # torch seed is used for all functions within.
@@ -166,44 +166,17 @@ class TorchDataLoader(BaseDataLoader):
         # def collate_fn(batch):
         #     return tuple(zip(*batch))
 
-        # DataLoader for Dataflux
-        # self._dataset = DataLoader(
-        #     dataset,
-        #     batch_size=self.batch_size,
-        #     sampler=sampler,
-        #     num_workers=self._args.read_threads,
-        #     pin_memory=True,
-        #     drop_last=True,
-        #     # worker_init_fn=dataset.worker_init,
-        #     # collate_fn=collate_fn,
-        #     **kwargs,
-        # )  # 2 is the default value
-
-        if torch.__version__ == "1.3.1":
-            if "prefetch_factor" in kwargs:
-                del kwargs["prefetch_factor"]
-            logging.info("yes we are in 1.3.1")
-            self._dataset = DataLoader(
-                dataset,
-                batch_size=self.batch_size,
-                sampler=sampler,
-                num_workers=self._args.read_threads,
-                pin_memory=True,
-                drop_last=True,
-                worker_init_fn=dataset.worker_init,
-                **kwargs,
-            )
-        else:
-            self._dataset = DataLoader(
-                dataset,
-                batch_size=self.batch_size,
-                sampler=sampler,
-                num_workers=self._args.read_threads,
-                pin_memory=True,
-                drop_last=True,
-                worker_init_fn=dataset.worker_init,
-                **kwargs,
-            )  # 2 is the default value
+        self._dataset = DataLoader(
+            dataset,
+            batch_size=self.batch_size,
+            sampler=sampler,
+            num_workers=self._args.read_threads,
+            pin_memory=True,
+            drop_last=True,
+            # collate_fn=collate_fn,
+            # worker_init_fn=dataset.worker_init,
+            **kwargs,
+        )  # 2 is the default value
 
         logging.debug(
             f"{utcnow()} Rank {self._args.my_rank} will read {len(self._dataset) * self.batch_size} files"

@@ -249,24 +249,6 @@ class DLIOBenchmark(object):
         #         f"Number of files for evaluation in {os.path.join(self.args.data_folder, f'{DatasetType.VALID}')} ({len(file_list_eval)}) is more than requested ({self.num_files_eval}). A subset of files will be used "
         #     )
         #     file_list_eval = file_list_eval[: self.num_files_eval]
-        if not self.generate_only and self.num_files_train > len(file_list_train):
-            raise Exception(
-                "Not enough training dataset is found; Please run the code with ++workload.workflow.generate_data=True"
-            )
-        if self.do_eval and self.num_files_eval > len(file_list_eval):
-            raise Exception(
-                "Not enough evaluation dataset is found; Please run the code with ++workload.workflow.generate_data=True"
-            )
-        if self.num_files_train < len(file_list_train):
-            logging.warning(
-                f"Number of files for training in {os.path.join(self.args.data_folder, f'{DatasetType.TRAIN}')} ({len(file_list_train)}) is more than requested ({self.num_files_train}). A subset of files will be used "
-            )
-            file_list_train = file_list_train[: self.num_files_train]
-        if self.num_files_eval < len(file_list_eval):
-            logging.warning(
-                f"Number of files for evaluation in {os.path.join(self.args.data_folder, f'{DatasetType.VALID}')} ({len(file_list_eval)}) is more than requested ({self.num_files_eval}). A subset of files will be used "
-            )
-            file_list_eval = file_list_eval[: self.num_files_eval]
         self.args.derive_configurations(file_list_train, file_list_eval)
         self.args.validate()
         self.comm.barrier()
