@@ -27,7 +27,6 @@ import numpy as np
 # Reduce TF and CUDA logging
 from numpy import random
 
-from dlio_benchmark.checkpointing.checkpointing_factory import CheckpointingFactory
 from dlio_benchmark.common.constants import MODULE_DLIO_BENCHMARK
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
@@ -248,9 +247,6 @@ class DLIOBenchmark(object):
             )
             file_list_eval = file_list_eval[: self.num_files_eval]
         self.args.derive_configurations(file_list_train, file_list_eval)
-        self.checkpointing_mechanism = CheckpointingFactory().get_mechanism(
-            self.args.checkpoint_mechanism
-        )
         self.args.validate()
         self.comm.barrier()
 
@@ -329,7 +325,7 @@ class DLIOBenchmark(object):
             ):
                 self.stats.end_block(epoch, block, block_step)
                 self.stats.start_ckpt(epoch, block, overall_step)
-                self.checkpointing_mechanism.checkpoint(epoch, overall_step)
+                self.framework.checkpoint(epoch, overall_step)
                 self.stats.end_ckpt(epoch, block)
                 block += 1
                 # Reset the number of steps after every checkpoint to mark the start of a new block
@@ -354,10 +350,9 @@ class DLIOBenchmark(object):
         ):
             self.stats.end_block(epoch, block, block_step)
             self.stats.start_ckpt(epoch, block, overall_step)
-            self.checkpointing_mechanism.checkpoint(epoch, overall_step)
+            self.framework.checkpoint(epoch, overall_step)
             self.stats.end_ckpt(epoch, block)
             self.next_checkpoint_epoch += self.epochs_between_checkpoints
-        self.comm.barrier()
         return overall_step
 
     @dlp.log
@@ -428,7 +423,6 @@ class DLIOBenchmark(object):
         It finalizes the dataset once training is completed.
         """
         self.comm.barrier()
-        self.checkpointing_mechanism.finalize()
         if not self.generate_only:
             if self.do_profiling:
                 self.profiler.stop()
