@@ -117,7 +117,10 @@ class TorchDataLoader(BaseDataLoader):
             project_name="zimbruplayground",
             bucket_name="bernardhan-unet3d-500k",
             data_format_fn=read_image_modified,
-            config=dataflux_mapstyle_dataset.Config(num_processes=20),
+            config=dataflux_mapstyle_dataset.Config(
+                num_processes=1,
+                max_composite_object_size=0,
+            ),
         )
         print(len(dataset.objects))
 
