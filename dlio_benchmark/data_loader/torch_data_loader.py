@@ -165,7 +165,7 @@ class TorchDataLoader(BaseDataLoader):
         sampler = dlio_sampler(
             self._args.my_rank,
             self._args.comm_size,
-            self.num_samples,
+            len(dataset.objects),
             self._args.sample_shuffle,
             self._args.epochs,
             self._args.seed,
