@@ -156,7 +156,7 @@ class TorchDataLoader(BaseDataLoader):
             data_format_fn=read_image_modified,
             config=dataflux_mapstyle_dataset.Config(
                 num_processes=20,
-                prefix="UNet3D/small/500KB-1100GB/train",
+                prefix="UNet3D/medium/3MB-150GB/train",
             ),
         )
 
