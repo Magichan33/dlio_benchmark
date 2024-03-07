@@ -62,6 +62,10 @@ from dlio_profiler.logger import dlio_logger as PerfTrace, fn_interceptor as Pro
 
 dlp = Profile(MODULE_DLIO_BENCHMARK)
 
+import dataflux_pytorch
+
+logging.getLogger(dataflux_pytorch.__name__).setLevel(logging.ERROR)
+
 
 class DLIOBenchmark(object):
     """
