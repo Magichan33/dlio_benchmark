@@ -153,9 +153,9 @@ class TorchDataLoader(BaseDataLoader):
         dataset = dataflux_mapstyle_dataset.DataFluxMapStyleDataset(
             project_name="gcs-tess",
             bucket_name="dataflux-tessellations-datasets",
-            data_format_fn=read_image_modified,
+            data_format_fn=read_dcm,
             config=dataflux_mapstyle_dataset.Config(
-                prefix="UNet3D/small/500KB-1100GB/train",
+                prefix="ispy-dlio/train/train",
                 num_processes=1,
                 max_composite_object_size=0,
             ),
