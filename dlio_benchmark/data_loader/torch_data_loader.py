@@ -155,7 +155,7 @@ class TorchDataLoader(BaseDataLoader):
             bucket_name="dataflux-tessellations-datasets",
             data_format_fn=read_dcm,
             config=dataflux_mapstyle_dataset.Config(
-                prefix="ispy-dlio/train/train",
+                prefix="ispy-dlio/train",
                 num_processes=1,
                 max_composite_object_size=0,
             ),
