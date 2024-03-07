@@ -155,7 +155,7 @@ class TorchDataLoader(BaseDataLoader):
             bucket_name="dataflux-tessellations-datasets",
             data_format_fn=read_image_modified,
             config=dataflux_mapstyle_dataset.Config(
-                prefix="UNet3D/large/150MB-750GB/train",
+                prefix="UNet3D/small/500KB-1100GB/train",
                 num_processes=1,
                 max_composite_object_size=0,
             ),
