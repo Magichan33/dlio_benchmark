@@ -22,6 +22,9 @@ if __name__ == "__main__":
     ]
 
     for file in files:
-        f = open(
-            f"/mnt/disks/ssd-array/dlio_benchmark/hydra_log/unet3d/{file}/per_epoch_stats.json"
-        )
+        try:
+            f = open(
+                f"/mnt/disks/ssd-array/dlio_benchmark/hydra_log/unet3d/{file}/per_epoch_stats.json"
+            )
+        except:
+            continue
