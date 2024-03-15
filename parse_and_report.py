@@ -1,5 +1,6 @@
 if __name__ == "__main__":
     import json
+    import statistics
 
     files = [
         "2024-03-12-22-39-48",
@@ -20,6 +21,11 @@ if __name__ == "__main__":
         "2024-03-13-23-58-09",
         "2024-03-14-00-50-11",
     ]
+    epochs1 = []
+    epochs2 = []
+    epochs3 = []
+    epochs4 = []
+    epochs5 = []
 
     for file in files:
         try:
@@ -32,4 +38,20 @@ if __name__ == "__main__":
 
         data = json.load(f)
 
-        print(data["1"]["duration"])
+        epochs1.append((data["1"]["duration"]))
+        epochs2.append((data["2"]["duration"]))
+        epochs3.append((data["3"]["duration"]))
+        epochs4.append((data["4"]["duration"]))
+        epochs5.append((data["5"]["duration"]))
+        f.close()
+
+    print(len(epochs1))
+    print(len(epochs2))
+    print(len(epochs3))
+    print(len(epochs4))
+    print(len(epochs5))
+    print(statistics.mean(epochs1))
+    print(statistics.mean(epochs2))
+    print(statistics.mean(epochs3))
+    print(statistics.mean(epochs4))
+    print(statistics.mean(epochs5))
