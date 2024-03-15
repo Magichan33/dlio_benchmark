@@ -38,11 +38,11 @@ if __name__ == "__main__":
 
         data = json.load(f)
 
-        epochs1.append((data["1"]["duration"]))
-        epochs2.append((data["2"]["duration"]))
-        epochs3.append((data["3"]["duration"]))
-        epochs4.append((data["4"]["duration"]))
-        epochs5.append((data["5"]["duration"]))
+        epochs1.append(int(data["1"]["duration"]))
+        epochs2.append(int(data["2"]["duration"]))
+        epochs3.append(int(data["3"]["duration"]))
+        epochs4.append(int(data["4"]["duration"]))
+        epochs5.append(int(data["5"]["duration"]))
         f.close()
 
     print(len(epochs1))
