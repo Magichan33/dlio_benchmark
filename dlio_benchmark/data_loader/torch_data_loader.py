@@ -108,24 +108,21 @@ class dlio_sampler(Sampler):
         self.shuffle = shuffle
         self.epochs = epochs
         self.seed = seed
+        self.indices = list(range(self.num_samples))
 
     def __len__(self):
         return self.num_samples
 
     def __iter__(self):
-        indices = list(range(self.num_samples))
         if self.shuffle != Shuffle.OFF:
             if self.shuffle == Shuffle.SEED:
                 np.random.seed(self.seed)
-            np.random.shuffle(indices)
+            np.random.shuffle(self.indices)
         samples_per_gpu = self.num_samples // self.size
         start = self.rank * samples_per_gpu
-        end = ((self.rank + 1) * samples_per_gpu) * self.epochs
-        logging.info(
-            f"rank={self.rank}, samples_per_gpu={samples_per_gpu}, start={start}, end={end}"
-        )
+        end = (self.rank + 1) * samples_per_gpu
         for i in range(start, end):
-            yield indices[i % self.num_samples]
+            yield self.indices[i % self.num_samples]
 
 
 class TorchDataLoader(BaseDataLoader):
