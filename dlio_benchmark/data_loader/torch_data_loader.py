@@ -205,7 +205,7 @@ class TorchDataLoader(BaseDataLoader):
             self._dataset = DataLoader(
                 dataset,
                 batch_size=self.batch_size,
-                sampler=sampler,
+                # sampler=sampler,
                 num_workers=self._args.read_threads,
                 pin_memory=True,
                 drop_last=True,
@@ -216,7 +216,8 @@ class TorchDataLoader(BaseDataLoader):
             self._dataset = DataLoader(
                 dataset,
                 batch_size=self.batch_size,
-                sampler=sampler,
+                # sampler=sampler,
+                shuffle=True,
                 num_workers=self._args.read_threads,
                 pin_memory=True,
                 drop_last=True,
