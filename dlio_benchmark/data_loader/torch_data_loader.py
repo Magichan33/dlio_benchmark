@@ -121,6 +121,9 @@ class dlio_sampler(Sampler):
         samples_per_gpu = self.num_samples // self.size
         start = self.rank * samples_per_gpu
         end = ((self.rank + 1) * samples_per_gpu) * self.epochs
+        logging.info(
+            f"rank={self.rank}, samples_per_gpu={samples_per_gpu}, start={start}, end={end}"
+        )
         for i in range(start, end):
             yield indices[i % self.num_samples]
 
@@ -216,8 +219,7 @@ class TorchDataLoader(BaseDataLoader):
             self._dataset = DataLoader(
                 dataset,
                 batch_size=self.batch_size,
-                # sampler=sampler,
-                shuffle=True,
+                sampler=sampler,
                 num_workers=self._args.read_threads,
                 pin_memory=True,
                 drop_last=True,
