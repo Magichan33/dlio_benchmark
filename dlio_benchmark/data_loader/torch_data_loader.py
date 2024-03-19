@@ -209,7 +209,6 @@ class TorchDataLoader(BaseDataLoader):
                 num_workers=self._args.read_threads,
                 pin_memory=True,
                 drop_last=True,
-                persistent_workers=True,
                 # worker_init_fn=dataset.worker_init,
                 **kwargs,
             )
@@ -222,7 +221,6 @@ class TorchDataLoader(BaseDataLoader):
                 pin_memory=True,
                 drop_last=True,
                 # worker_init_fn=dataset.worker_init,
-                persistent_workers=True,
                 **kwargs,
             )  # 2 is the default value
         logging.debug(
