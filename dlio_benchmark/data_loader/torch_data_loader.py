@@ -151,8 +151,8 @@ class TorchDataLoader(BaseDataLoader):
             return torch.rand((512, 512))
 
         dataset = dataflux_mapstyle_dataset.DataFluxMapStyleDataset(
-            project_name="gcs-tess",
-            bucket_name="dataflux-tessellations-datasets",
+            project_name="dataflux-project",
+            bucket_name="official-dataflux-tess",
             data_format_fn=read_image_modified,
             config=dataflux_mapstyle_dataset.Config(
                 prefix="UNet3D/large/150MB-750GB/train",
