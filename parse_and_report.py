@@ -22,7 +22,6 @@ if __name__ == "__main__":
                 f"/mnt/disks/ssd-array/dlio_benchmark/hydra_log/unet3d/{file}/per_epoch_stats.json"
             )
         except:
-            f.close()
             continue
 
         data = json.load(f)
