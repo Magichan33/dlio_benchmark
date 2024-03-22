@@ -155,7 +155,7 @@ class TorchDataLoader(BaseDataLoader):
             bucket_name="official-dataflux-tess",
             data_format_fn=read_image_modified,
             config=dataflux_mapstyle_dataset.Config(
-                prefix="UNet3D/medium/3MB-150GB/train",
+                prefix="UNet3D/large/150MB-750GB/train",
                 num_processes=20,
             ),
         )
