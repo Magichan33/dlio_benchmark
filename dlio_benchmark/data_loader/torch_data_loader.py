@@ -23,6 +23,7 @@ import torch
 from torch.utils.data import Dataset, DataLoader, RandomSampler, SequentialSampler
 from torch.utils.data.sampler import Sampler
 import numpy as np
+import pandas as pd
 
 from dlio_benchmark.common.constants import MODULE_DATA_LOADER
 from dlio_benchmark.common.enumerations import Shuffle, DatasetType, DataLoaderType
@@ -150,12 +151,15 @@ class TorchDataLoader(BaseDataLoader):
             read = dcmread(io.BytesIO(content_in_bytes))
             return torch.rand((512, 512))
 
+        def read_csv(content_in_bytes):
+            pd.read_csv(io.BytesIO(content_in_bytes, compression="infer")).to_numpy()
+
         dataset = dataflux_mapstyle_dataset.DataFluxMapStyleDataset(
             project_name="dataflux-project",
             bucket_name="official-dataflux-tess",
-            data_format_fn=read_image_modified,
+            data_format_fn=read_csv,
             config=dataflux_mapstyle_dataset.Config(
-                prefix="UNet3D/large/150MB-750GB/train",
+                prefix="custom-dlio",
                 num_processes=20,
             ),
         )
