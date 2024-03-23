@@ -152,7 +152,9 @@ class TorchDataLoader(BaseDataLoader):
             return torch.rand((512, 512))
 
         def read_csv(content_in_bytes):
-            pd.read_csv(io.BytesIO(content_in_bytes), compression="infer").to_numpy()
+            return pd.read_csv(
+                io.BytesIO(content_in_bytes), compression="infer"
+            ).to_numpy()
 
         dataset = dataflux_mapstyle_dataset.DataFluxMapStyleDataset(
             project_name="dataflux-project",
