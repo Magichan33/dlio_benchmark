@@ -36,7 +36,7 @@ from dlio_profiler.logger import fn_interceptor as Profile
 import numpy
 import io
 import dataflux_pytorch
-from dataflux_pytorch import dataflux_mapstyle_dataset
+from dataflux_pytorch import dataflux_mapstyle_dataset, dataflux_iterable_dataset
 from pydicom import dcmread
 
 logging.getLogger(dataflux_pytorch.__name__).setLevel(logging.ERROR)
@@ -156,12 +156,12 @@ class TorchDataLoader(BaseDataLoader):
                 io.BytesIO(content_in_bytes), compression="infer"
             ).to_numpy()
 
-        dataset = dataflux_mapstyle_dataset.DataFluxMapStyleDataset(
+        dataset = dataflux_iterable_dataset.DataFluxIterableDataset(
             project_name="dataflux-project",
             bucket_name="official-dataflux-tess",
-            data_format_fn=read_csv,
+            data_format_fn=read_image_modified,
             config=dataflux_mapstyle_dataset.Config(
-                prefix="custom-dlio",
+                prefix="UNet3D/large/150MB-750GB/train",
                 num_processes=20,
             ),
         )
